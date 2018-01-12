@@ -16,6 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".EditActivity"
+            android:parentActivityName=".MainActivity" />
+        <provider
+            android:authorities="com.product.android.memory.data"
+            android:name=".data.MemoProvider"
+            android:exported="false"/>
 
     </application>
 
