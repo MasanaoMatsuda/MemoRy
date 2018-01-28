@@ -20,7 +20,7 @@
             android:parentActivityName=".MainActivity" />
         <provider
             android:authorities="com.product.android.memory.data"
-            android:name=".data.MemoProvider"
+            android:name=".data.TopicProvider"
             android:exported="false"/>
 
     </application>

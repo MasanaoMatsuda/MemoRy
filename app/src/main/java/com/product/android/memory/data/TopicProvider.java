@@ -11,13 +11,13 @@ import android.support.annotation.Nullable;
  * Created by masanao on 2018/01/11.
  */
 
-public class MemoProvider extends ContentProvider {
+public class TopicProvider extends ContentProvider {
 
-    private MemoDbHelper mMemoDbHelper;
+    private TopicDbHelper mTopicDbHelper;
 
     @Override
     public boolean onCreate() {
-        mMemoDbHelper = new MemoDbHelper(getContext());
+        mTopicDbHelper = new TopicDbHelper(getContext());
         return true;
     }
 

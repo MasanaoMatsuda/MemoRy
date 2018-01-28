@@ -1,27 +1,23 @@
 package com.product.android.memory;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.product.android.memory.data.MemoContract;
-import com.product.android.memory.data.MemoDbHelper;
-import com.product.android.memory.data.MemoContract.MemoEntry;
-
-import java.util.ArrayList;
+import com.product.android.memory.data.TopicDbHelper;
+import com.product.android.memory.data.TopicContract.TopicEntry;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MemoDbHelper mDbHelper;
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    private TopicDbHelper mTopicDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,51 +32,36 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mDbHelper = new MemoDbHelper(this);
+        mTopicDbHelper = new TopicDbHelper(this);
+        Log.d(TAG, "@@@onCreate()");
         displayDatabaseInfo();
     }
 
     @Override
     protected void onStart() {
+        Log.d(TAG, "@@@onStart()");
         super.onStart();
         displayDatabaseInfo();
     }
 
+/*
     private void insertMemo() {
         ContentValues values = new ContentValues();
-        values.put(MemoEntry.COLUMN_MEMO_TITLE, "ダミータイトル");
-        values.put(MemoEntry.COLUMN_MEMO_CONTENTS, "ダミーコンテンツ「あいうえお」");
-        values.put(MemoEntry.COLUMN_MEMO_DATE, "2018.1.11");
-        values.put(MemoEntry.COLUMN_MEMO_IMPORTANCE_LV, MemoEntry.MEMO_IMPORTANCE_LOW);
+        values.put(TopicEntry.COLUMN_MEMO_TITLE, "ダミータイトル");
+        values.put(TopicEntry.COLUMN_MEMO_CONTENTS, "ダミーコンテンツ「あいうえお」");
+        values.put(TopicEntry.COLUMN_MEMO_DATE, "2018.1.11");
+        values.put(TopicEntry.COLUMN_MEMO_IMPORTANCE_LV, TopicEntry.MEMO_IMPORTANCE_LOW);
 
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        long newRow = db.insert(MemoEntry.TABLE_NAME, null, values);
+        SQLiteDatabase db = mTopicDbHelper.getWritableDatabase();
+        long newRow = db.insert(TopicEntry.TABLE_NAME, null, values);
     }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.insert_dummy_data:
-                Toast.makeText(this, "Insert", Toast.LENGTH_SHORT).show();
-                insertMemo();
-                displayDatabaseInfo();
-            case R.id.delete_all_data:
-                Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
+*/
 
 
     private void displayDatabaseInfo() {
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
-        Cursor cursor = db.query(MemoEntry.TABLE_NAME,
+        Log.d(TAG, "@@@displayDataBaseInfo()");
+        SQLiteDatabase db = mTopicDbHelper.getReadableDatabase();
+        Cursor cursor = db.query(TopicEntry.TABLE_NAME,
                 null,
                 null,
                 null,
@@ -89,26 +70,26 @@ public class MainActivity extends AppCompatActivity {
                 null);
         try{
             TextView textView = (TextView)findViewById(R.id.text_view_memos);
-            textView.setText("Number of rows in memo database table: "
+            textView.setText("Number of rows in topics table: "
                     + cursor.getCount() + "\n");
 
-            int indexId = cursor.getColumnIndex(MemoEntry._ID);
-            int indexTitle = cursor.getColumnIndex(MemoEntry.COLUMN_MEMO_TITLE);
-            int indexContents = cursor.getColumnIndex(MemoEntry.COLUMN_MEMO_CONTENTS);
-            int indexDate = cursor.getColumnIndex(MemoEntry.COLUMN_MEMO_DATE);
-            int indexImportance = cursor.getColumnIndex(MemoEntry.COLUMN_MEMO_IMPORTANCE_LV);
+            int indexId = cursor.getColumnIndex(TopicEntry._ID);
+            int indexTopic = cursor.getColumnIndex(TopicEntry.COLUMN_TOPIC);
+            int indexSource = cursor.getColumnIndex(TopicEntry.COLUMN_TOPIC_SOURCE);
+            int indexDate = cursor.getColumnIndex(TopicEntry.COLUMN_TOPIC_DATE);
+            int indexImportance = cursor.getColumnIndex(TopicEntry.COLUMN_TOPIC_IMPORTANCE_LV);
 
             for (int i = cursor.getCount() - 1; i > -1  ; i--) {
                 cursor.moveToPosition(i);
                 int id = cursor.getInt(indexId);
-                String title = cursor.getString(indexTitle);
-                String contents = cursor.getString(indexContents);
+                String topic = cursor.getString(indexTopic);
+                String source = cursor.getString(indexSource);
                 String date = cursor.getString(indexDate);
                 int importance = cursor.getInt(indexImportance);
 
                 String all = id + "/"
-                        + title + "/"
-                        + contents + "/"
+                        + topic + "/"
+                        + source + "/"
                         + date + "/"
                         + importance + "\n";
                 textView.append(all);
